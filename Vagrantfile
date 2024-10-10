@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "debian/bookworm64"
+    config.vm.network "forwarded_port", guest: 5000, host: 8080
+
+    config.vm.provision "file", source: "hello.py", destination: "/home/vagrant/hello.py"
+
+    config.vm.provision "shell", inline: <<-SHELL
+        sudo apt update
+        sudo apt install -y git nano vim python3-is-python3 python3-venv python3-pip
+        python3 -m venv flask_venv
+        source flask_venv/bin/activate
+        pip install Flask
+    SHELL
+
+end
